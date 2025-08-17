@@ -1,0 +1,540 @@
+1#derivative newton forward
+import numpy as np
+import math
+x_values = [1.70, 1.74, 1.78, 1.82, 1.86]
+y_values = [0.9916, 0.9857, 0.9781, 0.9691, 0.9584]
+
+n=len(x_values)
+h=x_values[1]-x_values[0]
+diff=np.zeros((n,n))
+diff[:,0]=y_values
+
+for i in range(1,n):
+    for j in range(n-i):
+        diff[j][i]=diff[j+1][i-1]-diff[j][i-1]
+        
+t = (1.72 - 1.70) / h
+def derivative_newton_forward(t, h, diff):
+    result = diff[0][1]
+
+    if len(diff[0]) >= 3:
+        result += ((2 * t - 1) / 2) * diff[0][2]
+    if len(diff[0]) >= 4:
+        result += ((3 * t**2 - 6 * t + 2) / 6) * diff[0][3]
+    if len(diff[0]) >= 5:
+        result += ((4 * t**3 - 18 * t**2 + 22 * t - 6) / 24) * diff[0][4]
+
+    return result / h
+approx_cos_1_72 = derivative_newton_forward(t,h, diff)
+print(f"Approximate cos(1.72): {approx_cos_1_72}")
+
+2#derivative newton backward
+import numpy as np
+import math
+x_values = [1.70, 1.74, 1.78, 1.82, 1.86]
+y_values = [0.9916, 0.9857, 0.9781, 0.9691, 0.9584]
+n=len(x_values)
+h = x_values[1] - x_values[0]  
+diff = [[
+    y_values[-1],
+    y_values[-1] - y_values[-2],
+    y_values[-1] - 2*y_values[-2] + y_values[-3],
+    y_values[-1] - 3*y_values[-2] + 3*y_values[-3] - y_values[-4],
+    y_values[-1] - 4*y_values[-2] + 6*y_values[-3] - 4*y_values[-4] + y_values[-5]
+]]
+
+t = (1.84 - x_values[-1]) / h
+
+def derivative_newton_backward(t, h, diff):
+    result = diff[0][1]  
+
+    if len(diff[0]) >= 3:
+        result += ((2 * t + 1) / 2) * diff[0][2]
+    if len(diff[0]) >= 4:
+        result += ((3 * t**2 + 6 * t + 2) / 6) * diff[0][3]
+    if len(diff[0]) >= 5:
+        result += ((4 * t**3 + 18 * t**2 + 22 * t + 6) / 24) * diff[0][4]
+
+    return result / h
+
+approx_cos_1_84 = derivative_newton_backward(t, h, diff)
+print(f"Approximate cos(1.84): {approx_cos_1_84:.6f}")
+
+3#derivative stirling
+import numpy as np
+import math
+x_values = [0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65]
+y_values = [1.521, 1.506, 1.488, 1.467, 1.444, 1.418, 1.389]
+
+h = x_values[1] - x_values[0]  # uniform interval = 0.05
+n = len(x_values)
+
+# Build the difference table
+diff = np.zeros((n, n))
+diff[:, 0] = y_values
+
+for j in range(1, n):
+    for i in range(n - j):
+        diff[i][j] = diff[i+1][j-1] - diff[i][j-1]
+
+# Find central value index near 0.47
+mid= 2 
+# x = 0.45 (3rd value) is closest to 0.47
+x0 = x_values[mid]
+t= (0.47 - x0) / h
+
+# Apply Stirling’s formula for the first derivative:
+d= (1 / h) * (
+    (diff[mid][1] + diff[mid - 1][1]) / 2
+    + t * (diff[mid - 1][2] / 2 + diff[mid - 1][2] / 2)  # approximate central second difference
+    + (t**2 - 1) * (diff[mid- 1][3] + diff[mid- 2][3]) / 4
+)
+
+print(f"Approximate derivative at x = 0.47 using Stirling's formula: {d:.6f}")
+
+4#derivative bessel
+import numpy as np
+import math
+x_values = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06]
+y_values = [0.1023, 0.1047, 0.1071, 0.1096, 0.1122, 0.1148]
+
+h = x_values[1] - x_values[0]  # Assuming equal spacing
+n = len(x_values)
+
+# Build forward difference table
+diff= np.zeros((n, n))
+diff[:, 0] = y_values
+
+for j in range(1, n):
+    for i in range(n - j):
+        diff[i][j] = diff[i + 1][j - 1] - diff[i][j-1]
+
+mid= 2  
+# y at x=0.03
+t= (0.04 - x_values[mid]) / h
+
+# Bessel’s first derivative formula components:
+dy= (1 / h) * (
+    diff[mid][1] + diff[mid+ 1][1]
+) / 2
+
+dy+= (t - 0.5) * diff[mid][2]
+dy+= ((3 * t**2 - 1) / 12) * (diff[mid][3] + diff[mid + 1][3]) / 2
+
+print(f"Approximate derivative at x = 0.04 using Bessel's formula: {dy:.6f}")
+
+5#trap,simp1/3,simp3/8 mix
+import numpy as np
+def f(x):
+    return np.sin(x) - np.log(x) + np.exp(x)
+a = 0.2
+b = 1.4
+h = 0.15
+x = np.arange(a, b + h, h)
+y = f(x)
+
+print("x values:", x)
+print("f(x) values:", y)
+
+t=(h/2)*(y[0]+2*(y[1]+y[2]+y[3]+y[4]+y[5]+y[6]+y[7])+y[8])
+
+s1=(h/3)*(y[0]+4*(y[1]+y[3]+y[5]+y[7])+2*(y[2]+y[4]+y[6])+y[8])
+
+s2=(3*h/8)*(y[0]+3*(y[1]+y[2]+y[4]+y[5]+y[7])+2*(y[3]+y[6])+y[8])
+
+print("Trapezoidal value:", t)
+print("Simpson's one-third value:", s1)
+print("Simpson's three-eight value:", s2)
+
+#graph
+import matplotlib.pyplot as plt
+plt.figure(figsize=(8, 5))
+plt.plot(x, y, 'bo-', label='f(x)')
+plt.fill_between(x, y, alpha=0.3, color='skyblue')
+plt.title('Area of the function')
+plt.xlabel('Value of x')
+plt.ylabel('Value of f(x)')
+plt.legend()
+plt.show()
+
+6#trap loop
+import numpy as np
+def f(x):
+    return np.sin(x) - np.log(x) + np.exp(x)
+a = 0.2
+b = 1.4
+h = 0.15
+x = np.arange(a, b + h, h)
+y = f(x)
+n=len(x)
+print("length",n)
+print("x values:", x)
+print("f(x) values:", y)
+
+t1=0
+for i in range (1,n-1,1):
+    t1+=y[i]
+trap=(h/2)*(y[0]+2*t1+y[n-1])
+print("Trapezoidal value:", trap)
+
+7#trap ,simp loop
+import numpy as np
+def f(x):
+    return 1/(1+(x**2))
+a = 0
+b = 1
+h = 0.001
+x = np.arange(a, b + h, h)
+y = f(x)
+n=len(x)
+print("length:", n)
+print("x values:", x)
+print("f(x) values:", y)
+t1=0
+for i in range (1,n-1, 1):
+    t1 += y[i]
+trap=(h/2)*(y[0]+2*t1+y[n-1])
+print("Trapezoidal value:", trap)
+
+
+s1=0
+s2=0
+for i in range (1,n-1, 2):
+    s1 += y[i]
+for i in range (2,n-2, 2):
+    s2 += y[i]
+sim1=(h/3)*(y[0]+4*s1+2*s2+y[n-1])
+print("Simpson's one-third value:", sim1)
+
+
+s3 = 0
+s4 = 0
+for i in range(1, n - 1):
+    if i % 3 == 0:
+        s4 += y[i]
+    else:
+        s3 += y[i]
+sim3 = (3 * h / 8) * (y[0] + 3 * s3 + 2 * s4 + y[n - 1])
+print("Simpson's three-eighth value:", sim3)
+
+#graph
+import matplotlib.pyplot as plt
+plt.figure(figsize=(8, 5))
+plt.plot(x, y, 'bo-', label='f(x)')
+plt.fill_between(x, y, alpha=0.3, color='skyblue')
+plt.title('Area of the function')
+plt.xlabel('Value of x')
+plt.ylabel('Value of f(x)')
+plt.legend()
+plt.show()
+
+8#trap,simp loop
+import numpy as np
+def f(x):
+    return x*np.exp(x)
+a = 0
+b = 1
+h = 0.001
+x = np.arange(a, b + h, h)
+y = f(x)
+n=len(x)
+print("length:", n)
+print("x values:", x)
+print("f(x) values:", y)
+t1=0
+for i in range (1,n-1, 1):
+    t1 += y[i]
+trap=(h/2)*(y[0]+2*t1+y[n-1])
+
+s1=0
+s2=0
+for i in range (1,n-1, 2):
+    s1 += y[i]
+for i in range (2,n-2, 2):
+    s2 += y[i]
+sim1=(h/3)*(y[0]+4*s1+2*s2+y[n-1])
+s3 = 0
+s4 = 0
+for i in range(1, n - 1):
+    if i % 3 == 0:
+        s4 += y[i]
+    else:
+        s3 += y[i]
+sim3 = (3 * h / 8) * (y[0] + 3 * s3 + 2 * s4 + y[n - 1])
+print("Trapezoidal value:", trap)
+print("Simpson's one-third value:", sim1)
+print("Simpson's three-eighth value:", sim3)
+
+#graph
+import matplotlib.pyplot as plt
+plt.figure(figsize=(8, 5))
+plt.plot(x, y, 'bo-', label='f(x)')
+plt.fill_between(x, y, alpha=0.3, color='skyblue')
+plt.title('Area of the function')
+plt.xlabel('Value of x')
+plt.ylabel('Value of f(x)')
+plt.legend()
+plt.show()
+
+9#trap,simp loop
+import numpy as np
+def f(x):
+    return np.sin(x) - np.log(x) + np.exp(x)
+a = 0.2
+b = 1.4
+h = 0.00002
+x = np.arange(a, b + h, h)
+y = f(x)
+n=len(x)
+print("length:", n)
+print("x values:", x)
+print("f(x) values:", y)
+t1=0
+for i in range (1,n-1, 1):
+    t1 += y[i]
+trap=(h/2)*(y[0]+2*t1+y[n-1])
+
+s1=0
+s2=0
+for i in range (1,n-1, 2):
+    s1 += y[i]
+for i in range (2,n-2, 2):
+    s2 += y[i]
+sim1=(h/3)*(y[0]+4*s1+2*s2+y[n-1])
+s3 = 0
+s4 = 0
+for i in range(1, n - 1):
+    if i % 3 == 0:
+        s4 += y[i]
+    else:
+        s3 += y[i]
+sim3 = (3 * h / 8) * (y[0] + 3 * s3 + 2 * s4 + y[n - 1])
+print("Trapezoidal value:", trap)
+print("Simpson's one-third value:", sim1)
+print("Simpson's three-eighth value:", sim3)
+
+#graph
+import matplotlib.pyplot as plt
+plt.figure(figsize=(8, 5))
+plt.plot(x, y, 'bo-', label='f(x)')
+plt.fill_between(x, y, alpha=0.3, color='skyblue')
+plt.title('Area of the function')
+plt.xlabel('Value of x')
+plt.ylabel('Value of f(x)')
+plt.legend()
+plt.show()
+
+10#trap,simp loop
+import numpy as np
+def f(x):
+    return 1/(1+x+x**2)
+a = -5.0
+b = 5.0
+h = 0.1
+x = np.arange(a, b + h, h)
+y = f(x)
+n=len(x)
+print("length:", n)
+print("x values:", x)
+print("f(x) values:", y)
+t1=0
+for i in range (1,n-1, 1):
+    t1 += y[i]
+trap=(h/2)*(y[0]+2*t1+y[n-1])
+
+s1=0
+s2=0
+for i in range (1,n-1, 2):
+    s1 += y[i]
+for i in range (2,n-2, 2):
+    s2 += y[i]
+sim1=(h/3)*(y[0]+4*s1+2*s2+y[n-1])
+s3 = 0
+s4 = 0
+for i in range(1, n - 1):
+    if i % 3 == 0:
+        s4 += y[i]
+    else:
+        s3 += y[i]
+sim3 = (3 * h / 8) * (y[0] + 3 * s3 + 2 * s4 + y[n - 1])
+print("Trapezoidal value:", trap)
+print("Simpson's one-third value:", sim1)
+print("Simpson's three-eighth value:", sim3)
+
+#graph
+import matplotlib.pyplot as plt
+plt.figure(figsize=(8, 5))
+plt.plot(x, y, 'bo-', label='f(x)')
+plt.fill_between(x, y, alpha=0.3, color='skyblue')
+plt.title('Area of the function')
+plt.xlabel('Value of x')
+plt.ylabel('Value of f(x)')
+plt.legend()
+plt.show()
+
+11#Initial value taylor
+# Given initial values
+x = 0
+y = 1
+h = 0.1
+
+# First derivative
+def dy_dx(x, y):
+    return x + y
+
+# Second derivative
+def d2y_dx2(x, y):
+    return x + y + 1  
+
+# Apply Taylor Series
+y_next = y + h * dy_dx(x, y) + (h**2 / 2) * d2y_dx2(x, y)
+
+print(f"Approximate value of y(0.1) using Taylor Series: {y_next:.3f}")
+
+
+# Given initial values
+x = 0
+y = 0
+h = 0.4
+
+# First derivative
+def dy_dx(x, y):
+    return x**2 + y**2
+
+# Second derivative
+def d2y_dx2(x, y):
+    return 2*x + (2*y*(x**2 + y**2))
+
+# Third derivative
+def d3y_dx3(x, y):
+    return 2 + 4*x*y + (6*y*(x**2 + y**2))
+
+# Apply Taylor Series
+y_next = y + h * dy_dx(x, y) + (h**2 / 2) * d2y_dx2(x, y) +(h**3/6) * d3y_dx3(x, y)
+
+print(f"Approximate value of y(0.4) using Taylor Series: {y_next:.3f}")
+
+
+# Euler's Method
+# Given initial values
+x = 0
+y = 1
+h = 0.1
+
+# First derivative
+def dy_dx(x, y):
+    return x + y
+x1=0.1
+y1 = y + h * dy_dx(x, y)
+
+def dy1_dx1(x1, y1):
+    return x1 + y1
+
+y2 = y1 + h * dy1_dx1(x1, y1)
+print(f"Approximate value of y(2) using Euler's Method: {y1:.3f}")
+print(f"Approximate value of y(2) using Euler's Method: {y2:.3f}")
+
+##taylor
+# Initial values
+x = 0
+y = 1
+h = 0.1
+n_steps = 2  
+
+# Store results
+x_vals = [x]
+y_vals = [y]
+
+# Define first derivative
+def dy_dx(x, y):
+    return x + y
+
+# Loop to calculate y values
+for i in range(n_steps):
+    y_new = y + h * dy_dx(x, y)
+    x += h
+    y = y_new
+    x_vals.append(x)
+    y_vals.append(y)
+
+print(f"Approximate value of y(2) using Taylor Series: {y_vals[-1]:.3f}")
+
+
+import numpy as np
+a=0
+b=0.12
+x = np.arange(a, b+h, h)
+y = 1
+h = 0.02
+x
+n=len(x)
+n
+
+##taylor
+x = 0
+y = 1
+h = 0.02
+n_steps = 7  # To reach x = 0.12
+
+# Store results
+x_vals = [x]
+y_vals = [y]
+
+# Define first derivative
+def dy_dx(x, y):
+    return x**3 + y
+
+# Loop to calculate y values
+for i in range(n_steps):
+    y_new = y + h * dy_dx(x, y)
+    x += h
+    y = y_new
+    x_vals.append(x)
+    y_vals.append(y)
+
+print(f"Approximate value of y(2) using Taylor Series: {y_vals[-1]:.3f}")
+
+##taylor
+import math as m
+x = 0
+x1 = 0.15
+y = 2
+h = 0.15
+
+
+k1 = h*m.log(x+y)
+k2 = h*m.log(x+(0.15/2)+y+(k1/2))
+k3 = h*m.log(x+(0.15/2)+y+(k2/2))
+k4 = h*m.log(x1+y+k3)
+
+y1 = y + (1/6)*(k1 + 2*k2 + 2*k3 + k4)
+
+x2 = 0.15
+x3 = 0.30
+
+
+
+k5 = h*m.log(x2+y1)
+k6 = h*m.log(x2+(0.15/2)+y1+(k5/2))
+k7 = h*m.log(x2+(0.15/2)+y1+(k6/2))
+k8 = h*m.log(x3+y1+k7)
+
+y2 = y1 + (1/6)*(k5 + 2*k6 + 2*k7 + k8)
+print(f"Approximate value of y(2) using Taylor Series: {y2:.6f}")
+
+##RK4
+import math as m
+x = 0
+x1 = 0.3
+y = 2
+h = 0.3
+
+
+k1 = h*m.log(x+y)
+k2 = h*m.log((h/2)+y+(k1/2))
+k3 = h*m.log((h/2)+y+(k2/2))
+k4 = h*m.log(x1+y+k3)
+
+y1 = y + (1/6)*(k1 + 2*k2 + 2*k3 + k4)
+
+print(f"Approximate value of y(1) using Runge Kutta Method: {y1:.6f}")
