@@ -1,0 +1,250 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# from mpl_toolkits.mplot3d import Axes3D
+# plot of y = sin(x)
+x = np.linspace(0, 2*np.pi, 500)
+y = np.sin(x)
+plt.figure()
+plt.plot(x, y, color='green')
+plt.title(" y = sin(x)")
+plt.xlabel("x"); plt.ylabel("y")
+plt.show()
+
+# plot of y = e^(-x) * cos(2πx)
+y = np.exp(-x) * np.cos(2*np.pi*x)
+plt.figure()
+plt.plot(x, y)
+plt.title(r" $y = e^{-x} \cos(2\pi x)$")
+plt.xlabel("x"); plt.ylabel("y")
+plt.show()
+
+# plot of y = x^2
+x = np.linspace(-5, 5, 500)
+y = x**2
+plt.figure()
+plt.plot(x, y, color='red')
+plt.title(" y = x2")
+plt.xlabel("x"); plt.ylabel("y")
+plt.show()
+
+# plot of y = sin(x) / x (Sinc function)
+x = np.linspace(-10, 10, 400)
+y = np.sinc(x)
+plt.figure()
+plt.plot(x, y)
+plt.title(r" $y = \frac{\sin(\pi x)}{\pi x}$")
+plt.xlabel("x"); plt.ylabel("y")
+plt.show()
+
+# plot of 3D Line: Helix x = cos(t), y = sin(t), z = t
+t = np.linspace(0, 10, 500)
+x3 = np.cos(t)
+y3 = np.sin(t)
+z3 = t
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot3D(x3, y3, z3)
+ax.set_title(" Helix: x=cos(t), y=sin(t), z=t")
+plt.show()
+
+# plot of 3D Scatter: Sphere surface (x2 + y2 + z2 = 1)
+phi = np.linspace(0, np.pi, 30)
+theta = np.linspace(0, 2*np.pi, 30)
+phi, theta = np.meshgrid(phi, theta)
+x_s = np.sin(phi) * np.cos(theta)
+y_s = np.sin(phi) * np.sin(theta)
+z_s = np.cos(phi)
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.scatter(x_s, y_s, z_s, c=z_s, cmap='viridis')
+ax.set_title(" Sphere: x2+y2+z2=1")
+plt.show()
+
+# plot of z = sin(sqrt(x2 + y2))
+X = np.linspace(-5, 5, 30)
+Y = np.linspace(-5, 5, 30)
+X, Y = np.meshgrid(X, Y)
+Z = np.sin(np.sqrt(X**2 + Y**2))
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot_wireframe(X, Y, Z, color='red')
+ax.set_title(r" $z = \sin(\sqrt{x^2 + y^2})$")
+plt.show()
+
+# plot of z = cos(x) * sin(y)
+X = np.linspace(-5, 5, 50)
+Y = np.linspace(-5, 5, 50)
+X, Y = np.meshgrid(X, Y)
+Z = np.cos(X) * np.sin(Y)
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+surf = ax.plot_surface(X, Y, Z, cmap='plasma')
+fig.colorbar(surf)
+ax.set_title(r" $z = \cos(x) \sin(y)$")
+plt.show()
+
+# plot of Contour: z = x2 - y2
+X = np.linspace(-3, 3, 50)
+Y = np.linspace(-3, 3, 50)
+X, Y = np.meshgrid(X, Y)
+Z = X**2 - Y**2
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.contour3D(X, Y, Z, 50, cmap='coolwarm')
+ax.set_title(r" $z = x^2 - y^2$")
+plt.show()
+
+######## Polar equation
+#r(θ)=cos(kθ) or r(θ)=sin(kθ)
+# Rose Flower equation (rose curve)
+theta = np.linspace(0, 2*np.pi, 1000)
+k = 7 # Number controlling petals
+r = np.cos(k * theta)
+# Convert polar to Cartesian for plotting
+x = r * np.cos(theta)
+y = r * np.sin(theta)
+plt.figure(figsize=(6,6))
+plt.plot(x, y, color="magenta", linewidth=2)
+plt.fill(x, y, color="violet", alpha=0.4) # fill petals
+plt.title(r"Flower Plot: $r = \cos(k\theta), \ k=6$")
+plt.axis("equal")
+plt.show()
+
+##############
+theta = np.linspace(0, 2*np.pi, 1000)
+k = 6 # Number controlling petals
+r = np.cos(k * theta)
+# Convert polar to Cartesian for plotting
+x = r * np.cos(theta)
+y = r * np.sin(theta)
+plt.figure(figsize=(6,6))
+plt.plot(x, y, color="magenta", linewidth=2)
+plt.fill(x, y, color="violet", alpha=0.4) # fill petals
+plt.title(r"Flower Plot: $r = \cos(k\theta), \ k=6$")
+plt.axis("equal")
+plt.show()
+
+##############
+# Parameters
+theta = np.linspace(0, 2*np.pi, 200)
+phi = np.linspace(0, np.pi, 100) # vertical angle
+theta, phi = np.meshgrid(theta, phi)
+
+# Flower equation (3D rose-like surface)
+k = 6 # controls number of petals
+r = np.cos(k * theta) * np.sin(phi)
+# Convert to Cartesian coordinates
+x = r * np.cos(theta)
+y = r * np.sin(theta)
+z = np.cos(phi) * r
+# Plot
+fig = plt.figure(figsize=(8,6))
+ax = fig.add_subplot(111, projection='3d')
+ax.plot_surface(x, y, z, cmap='plasma', edgecolor='none', alpha=0.9)
+# Decorations
+ax.set_title("3D Flower Surface )
+ax.set_xlabel("X-axis")
+ax.set_ylabel("Y-axis")
+ax.set_zlabel("Z-axis")
+plt.show()
+
+############################# Different Bar Plots
+# Sample data
+categories = ['A', 'B', 'C', 'D']
+values1 = [4, 7, 3, 6]
+values2 = [5, 2, 4, 5]
+
+# Vertical bar plot
+plt.figure(figsize=(6,4))
+plt.bar(categories, values1, color='skyblue')
+plt.title("Vertical Bar Plot")
+plt.ylabel("Values")
+plt.show()
+
+# Horizontal bar plot
+plt.figure(figsize=(6,4))
+plt.barh(categories, values1, color='lightgreen')
+plt.title("Horizontal Bar Plot")
+plt.xlabel("Values")
+plt.show()
+
+# Bar plot with custom colors for each bar
+colors = ['red', 'green', 'blue', 'gold']
+plt.figure(figsize=(6,4))
+plt.bar(categories, values1, color=colors)
+plt.title("Custom Colors Bar Plot")
+plt.show()
+
+# Grouped bar plot
+x = np.arange(len(categories))
+width = 0.35
+plt.figure(figsize=(6,4))
+plt.bar(x - width/2, values1, width, label='Group 1', color='orange')
+plt.bar(x + width/2, values2, width, label='Group 2', color='blue')
+plt.xticks(x, categories)
+plt.title("Grouped Bar Plot")
+plt.legend()
+plt.show()
+
+# Stacked bar plot
+plt.figure(figsize=(6,4))
+plt.bar(categories, values1, color='purple', label='Group 1')
+plt.bar(categories, values2, bottom=values1, color='pink', label='Group 2')
+plt.title("Stacked Bar Plot")
+plt.legend()
+plt.show()
+
+####################### line charts
+# Sample data
+x = np.linspace(0, 10, 500)
+y1 = np.sin(x)
+y2 = np.cos(x)
+
+# Simple line chart
+plt.figure(figsize=(6,4))
+plt.plot(x, y1, color='blue')
+plt.title("Simple Line Chart")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.show()
+
+# Multiple lines on the same plot
+plt.figure(figsize=(6,4))
+plt.plot(x, y1, label='sin(x)', color='blue')
+plt.plot(x, y2, label='cos(x)', color='red')
+plt.title("Multiple Lines")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.legend()
+plt.show()
+
+# Dashed and dotted line styles
+plt.figure(figsize=(6,4))
+plt.plot(x, y1, linestyle='--', label='Dashed', color='green')
+plt.plot(x, y2, linestyle=':', label='Dotted', color='orange')
+plt.title("Different Line Styles")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.legend()
+plt.show()
+
+# Line chart with markers
+plt.figure(figsize=(6,4))
+plt.plot(x, y1, marker='o', markersize=4, label='sin(x)', color='purple')
+plt.plot(x, y2, marker='s', markersize=4, label='cos(x)', color='brown')
+plt.title("Line Chart with Markers")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.legend()
+plt.show()
+
+# Line chart with shaded area
+plt.figure(figsize=(6,4))
+plt.plot(x, y1, color='blue', label='sin(x)')
+plt.fill_between(x, y1, alpha=0.3, color='blue')
+plt.title("Line Chart with Shaded Area")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.legend()
+plt.show()
