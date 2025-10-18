@@ -1,0 +1,106 @@
+1. Loop through a List
+fruits = ['apple', 'banana', 'cherry']
+for fruit in fruits:
+print(fruit)
+
+2. Loop with range()
+for i in range(5):
+print(i)
+
+3. While loop
+i = 0
+while i < 5:
+print(i)
+i += 1
+
+4. Loop through a String
+for char in 'hello':
+print(char)
+
+5. Break in a For Loop
+for i in range(10):
+if i == 3:
+break
+print(i)
+
+6. Continue in a For Loop
+for i in range(5):
+if i == 2:
+continue
+print(i)
+
+7. While loop with break
+i = 0
+while True:
+if i == 4:
+break
+print(i)
+i += 1
+
+8. While loop with continue
+i = 0
+while i < 5:
+i += 1
+if i == 3:
+continue
+print(i)
+
+9. For
+-else Loop
+for i in range(3):
+print(i)
+else:
+print('Loop completed.')
+
+10. Nested For Loops
+for i in range(1, 4):
+for j in range(1, 4):
+print(f'{i} * {j} = {i * j}')
+
+11. Using enumerate()
+colors = ['red', 'green', 'blue']
+for index, color in enumerate(colors):
+print(index, color)
+
+12. Loop through Dictionary
+person = {'name': 'Alice', 'age': 25}
+for key, value in person.items():
+print(f'{key}: {value}')
+
+13. Using zip()
+names = ['Anna', 'Ben']
+scores = [90, 85]
+for name, score in zip(names, scores):
+print(f'{name} scored {score}')
+
+14. Loop in Reverse
+for i in reversed(range(5)):
+print(i)
+
+15. Loop with sorted()
+nums = [3, 1, 4, 2]
+for n in sorted(nums):
+print(n)
+
+16. List Comprehension (Squares)
+squares = [x**2 for x in range(5)]
+print(squares)
+
+17. Conditional List Comprehension
+evens = [x for x in range(10) if x % 2 == 0]
+print(evens)
+
+18. Set Comprehension
+unique_letters = {letter for letter in 'banana'}
+print(unique_letters)
+
+19. Dictionary Comprehension
+cubes = {x: x**3 for x in range(4)}
+print(cubes)
+
+20. Count Vowels in Text
+text = 'Hello World'
+vowels = 'aeiouAEIOU'
+for ch in text:
+if ch in vowels:
+print(f'Vowel found: {ch}')
