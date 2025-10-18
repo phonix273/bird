@@ -1,0 +1,169 @@
+#####CT question -1
+fixed_cost=20000
+production_cost=33.80
+T=1000
+total_cost=fixed_cost+production_cost*T
+print(total_cost)
+
+##CT question -2
+for i in range(10,-1,-1):
+    print(i)
+print('Rocket lounched')
+
+#####CT question -3
+for i in range(4):
+    hour=9+i*2 
+    print(f'Take a break at {hour}:00')
+    
+    
+#####CT question-4
+import numpy as np
+data=np.array([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20])
+mean=np.mean(data)
+print(mean)
+
+
+#####2nd CT QUESTION-1
+#####1 median
+import numpy as np
+data=[50,45,34,42,800,34,39,42,44]
+median=np.median(data)
+print(median)
+####2(i) geometric probability
+from scipy.stats import geom
+p=0.03
+k=5 
+prob1=geom.cdf(k,p)
+print(prob1)
+####2(ii)Exponential probability
+from scipy.stats import expon
+prob2=expon.cdf(k,scale=1/p)
+print(prob2)
+
+#####2(iii)Geometric disthn
+prob3=1-geom.cdf(50,p)
+expected_runs=prob3*10000
+print(expected_runs)
+
+#####3 Visualization of a disthn
+import matplotlib.pyplot as plt
+import math
+import numpy as np
+x=np.linspace(20,50,500)
+y=(x-20)/30
+plt.plot(x,y,color='pink')
+plt.title('Visualize of a distribution function')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.show()
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(20, 50, 500)
+F_x = (x - 20)/(50 - 20)  # CDF
+
+plt.plot(x, F_x, color='blue', label='CDF F(x)')
+plt.title("CDF of Uniform(20,50)")
+plt.xlabel("x")
+plt.ylabel("F(x)")
+plt.grid(True)
+plt.legend()
+plt.show()
+
+####
+import numpy as np
+
+p = 0.03
+
+# (i)
+prob_within_5 = 1 - (1 - p)**5
+
+# (ii)
+poisson_approx = 1 - np.exp(-5 * p)
+
+# (iii)
+expected_before_defective = 1 / p
+expected_in_10000 = 10000 * expected_before_defective
+
+print("P(defective within 5 bulbs) =", prob_within_5)
+print("Poisson approximation =", poisson_approx)
+print("Expected bulbs before first defective =", expected_before_defective)
+print("Expected total in 10,000 runs =", expected_in_10000)
+   
+# Q9: Company’s Monthly Expense Calculation
+
+# Given values
+fixed_cost = 20000
+cost_per_unit = 33.80
+units = 1000
+
+# Total cost formula
+total_cost = fixed_cost + (cost_per_unit * units)
+
+# Output
+print("Total cost for", units, "units =", total_cost, "taka")
+
+# 1️⃣ Drink water 5 times
+print("1️⃣ Drink Water 5 times")
+for i in range(5):
+    print(f"Reminder {i+1}: Drink water")
+print("-" * 40)
+
+# 2️⃣ Drink water every 2 hours from 6 AM
+print("2️⃣ Drink Water Every 2 Hours")
+hour = 6
+for i in range(6):
+    suffix = "AM" if hour < 12 else "PM"
+    display_hour = hour if hour <= 12 else hour - 12
+    print(f"{display_hour} {suffix}: Reminder {i+1}: Drink Water")
+    hour += 2
+print("-" * 40)
+
+# 3️⃣ Typing effect (display each character)
+print("3️⃣ Typing Effect")
+message = "Welcome!"
+for char in message:
+    print(char)
+print("-" * 40)
+
+# 4️⃣ Search inventory for milk
+print("4️⃣ Search Inventory for Milk")
+inventory = ["bread", "eggs", "milk", "butter"]
+item_to_find = "milk"
+for item in inventory:
+    if item == item_to_find:
+        print(f"{item_to_find} found in inventory.")
+        break
+print("-" * 40)
+
+# 5️⃣ Skip unavailable items
+print("5️⃣ Skip Unavailable Items")
+inventory = ["bread", "eggs", "milk", "butter", "unavailable"]
+for item in inventory:
+    if item == "unavailable":
+        continue
+    print(item)
+print("-" * 40)
+
+# 6️⃣ Traffic light countdown
+print("6️⃣ Traffic Light Countdown")
+for i in range(1, 6):
+    print(i)
+print("Green Light")
+print("-" * 40)
+
+# 7️⃣ Elevator skipping 13th floor
+print("7️⃣ Elevator Floors (Skip 13th)")
+for i in range(1, 21):
+    if i == 13:
+        continue
+    print(f"You have reached: {i}th floor")
+print("-" * 40)
+
+# 8️⃣ Countdown for Liftoff
+print("8️⃣ Rocket Countdown")
+for i in range(4, -1, -1):
+    print(i)
+print("Liftoff!")
+print("-" * 40)
